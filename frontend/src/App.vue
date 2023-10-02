@@ -1,10 +1,11 @@
 <template>
-    <app-header/>
-    <home-view/>
+    <app-layout>
+        <home-view />
+    </app-layout>
 </template>
 
 <script setup>
-import { AppHeader } from "@/layouts";
+import { AppLayout } from "@/layouts";
 import { HomeView } from "@/views";
 </script>
 

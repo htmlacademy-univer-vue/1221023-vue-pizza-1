@@ -11,8 +11,8 @@
             <h2 class="title title--small sheet__title">Выберите тесто</h2>
 
             <div class="sheet__content dough">
-              <label v-for="(dough, index) in doughs" :key="dough.id" class="dough__input">
-                <input type="radio" name="dought" :value="dough.id" class="visually-hidden" :checked="index === 0">
+              <label v-for="(dough, index) in doughs" :key="dough.id" class="dough__input " :class="'dough__input--'+doughName(dough)" >
+                <input type="radio" name="dought" :value="doughName(dough)" class="visually-hidden" :checked="index === 0">
                 <b>{{ dough.name }}</b>
                 <span>{{ dough.description }}</span>
               </label>
@@ -25,8 +25,8 @@
             <h2 class="title title--small sheet__title">Выберите размер</h2>
 
             <div class="sheet__content diameter">
-              <label v-for="(size, index) in sizes" :key="size.id" class="diameter__input">
-                <input type="radio" name="diameter" :value="size.id" class="visually-hidden" :checked="index === 1">
+              <label v-for="(size, index) in sizes" :key="size.id" class="diameter__input" :class="'diameter__input--'+sizeName(size)">
+                <input type="radio" name="diameter" :value="sizeName(size)" class="visually-hidden" :checked="index === 1">
                 <span>{{ size.name }}</span>
               </label>
             </div>
@@ -41,14 +41,9 @@
 
               <div class="ingredients__sauce">
                 <p>Основной соус:</p>
-
-                <label class="radio ingredients__input">
-                  <input type="radio" name="sauce" value="tomato" checked>
-                  <span>Томатный</span>
-                </label>
-                <label class="radio ingredients__input">
-                  <input type="radio" name="sauce" value="creamy">
-                  <span>Сливочный</span>
+                <label v-for="(sauce, index) in sauces" :key="sauce.id" class="radio ingredients__input">
+                  <input type="radio" name="sauce" :value="sauceName(sauce)" :checked="index === 0">
+                  <span>{{ sauce.name }}</span>
                 </label>
               </div>
 
@@ -57,7 +52,7 @@
 
                 <ul class="ingredients__list">
                     <li v-for="ingredient in ingredients" :key="ingredient.id" class="ingredients__item">
-                      <span class="filling">{{ ingredient.name }}</span>
+                      <span class="filling" :class="'filling--'+ingredientName(ingredient)">{{ ingredient.name }}</span>
 
                       <div class="counter counter--orange ingredients__counter">
                         <button type="button" class="counter__button counter__button--minus" disabled>
@@ -109,4 +104,8 @@
 	import doughs from '../mocks/dough.json'
 	import sizes from '../mocks/sizes.json'
 	import ingredients from '../mocks/ingredients.json'
+	import sauces from '../mocks/sauces.json'
+
+  import {doughName, sizeName, ingredientName, sauceName} from '@/common/helpers';
+
 </script>

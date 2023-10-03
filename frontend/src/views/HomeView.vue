@@ -80,11 +80,14 @@
             :selected-sauce="selectedSauce || {}"
             :selected-size="selectedSize || {}"
             :selected-ingredients="selectedIngredients || {}"
+            @drop="addingIngredient"
           />
 
           <div class="content__result">
             <p v-text="'Итого: ' + totalPriceInfo + ' ₽'"></p>
-            <GreenButton :disabled="isButtonDisabled" @click="printInfo"> Готовьте! </GreenButton>
+            <GreenButton :disabled="isButtonDisabled" @click="printInfo">
+              Готовьте!
+            </GreenButton>
           </div>
         </div>
       </BigBlock>
@@ -107,7 +110,7 @@ import PizzaConstructor from "@/modules/constructor/PizzaConstructor.vue";
 import ChooseSize from "@/modules/constructor/ChooseSize.vue";
 import ChooseSauce from "@/modules/constructor/ChooseSauce.vue";
 import AddIngredient from "@/modules/constructor/AddIngredient.vue";
-import {computed, ref} from "vue";
+import { computed, ref } from "vue";
 
 const selectedDough = ref(doughs[0]);
 const updateSelectedDough = (dough) => {
@@ -138,17 +141,25 @@ const updateSelectedIngredients = (ingredient, count) => {
   selectedIngredients.value[ingredient.id] = count;
 };
 
-function printInfo(){
-    console.log(pizzaName.value)
-    console.log(selectedIngredients.value)
-    console.log(selectedSize.value)
-    console.log(selectedDough.value)
-    console.log(selectedSauce.value)
-    console.log(totalPriceInfo.value)
+const addingIngredient = (ingredient) => {
+  selectedIngredients.value[ingredient.id]++;
+};
+
+const pizza = computed(() => {
+  return {
+    pizzaName: pizzaName.value,
+    selectedIngredients: selectedIngredients.value,
+    selectedSize: selectedSize.value,
+    selectedDough: selectedDough.value,
+    selectedSauce: selectedSauce.value,
+    totalPrice: totalPriceInfo.value,
+  };
+});
+function printInfo() {
+  console.log("Pizza:", pizza.value);
 }
 
 const totalPriceInfo = computed(() => {
-
   const doughPrice = selectedDough.value
     ? selectedDough.value.price
     : doughs[0].price;
@@ -160,11 +171,12 @@ const totalPriceInfo = computed(() => {
     ? selectedSize.value.multiplier
     : sizes[0].multiplier;
 
-
   let totalPrice = Object.entries(selectedIngredients.value)
     .filter(([ingredientId, count]) => count > 0)
     .reduce((total, [ingredientId, count]) => {
-      const ingredient = ingredients.find((i) => i.id === parseInt(ingredientId));
+      const ingredient = ingredients.find(
+        (i) => i.id === parseInt(ingredientId)
+      );
       return total + ingredient.price * count;
     }, 0);
 

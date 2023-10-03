@@ -1,20 +1,17 @@
 <template>
-  <app-drag :transfer-data="sauce">
-    <label>
-      <input
-        type="radio"
-        name="sauce"
-        :value="sauceName(sauce)"
-        :checked="index === 0"
-        @click="selectSauce"
-      />
-      <span>{{ sauce.name }}</span>
-    </label>
-  </app-drag>
+  <label>
+    <input
+      type="radio"
+      name="sauce"
+      :value="sauceName(sauce)"
+      :checked="index === 0"
+      @click="selectSauce"
+    />
+    <span>{{ sauce.name }}</span>
+  </label>
 </template>
 <script setup>
 import { sauceName } from "@/common/helpers";
-import AppDrag from "@/common/components/AppDrag.vue";
 import {getCurrentInstance} from "vue";
 
 const props = defineProps({

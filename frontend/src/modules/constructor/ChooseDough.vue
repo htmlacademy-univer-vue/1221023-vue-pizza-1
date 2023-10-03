@@ -1,18 +1,16 @@
 <template>
-  <app-drag :transfer-data="dough">
-    <label>
-      <input
-        type="radio"
-        name="dought"
-        :value="doughName(dough)"
-        class="visually-hidden"
-        :checked="index === 0"
-        @click="selectDough"
-      />
-      <b>{{ dough.name }}</b>
-      <span>{{ dough.description }}</span>
-    </label>
-  </app-drag>
+  <label>
+    <input
+      type="radio"
+      name="dought"
+      :value="doughName(dough)"
+      class="visually-hidden"
+      :checked="index === 0"
+      @click="selectDough"
+    />
+    <b>{{ dough.name }}</b>
+    <span>{{ dough.description }}</span>
+  </label>
 </template>
 <script setup>
 import { doughName } from "@/common/helpers";

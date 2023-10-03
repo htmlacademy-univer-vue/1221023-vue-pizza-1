@@ -57,29 +57,34 @@
                   :key="ingredient.id"
                   class="ingredients__item"
                   :ingredient="ingredient"
+                  :selected-ingredients="selectedIngredients || {}"
+                  :update-selected-ingredients="updateSelectedIngredients"
                 />
               </ul>
             </div>
           </SheetBlock>
         </div>
         <div class="content__pizza">
-          <SimpleInput
-            :hidden-span="String('Название пиццы')"
-            :input-name="String('pizza_name')"
-            :type="String('text')"
-            :placeholder="String('Введите название пиццы')"
-          />
+          <label class="input">
+            <span class="visually-hidden">Название пиццы</span>
+            <input
+              v-model="pizzaName"
+              type="text"
+              name="pizza_name"
+              placeholder="Введите название пиццы"
+            />
+          </label>
 
           <pizza-constructor
             :selected-dough="selectedDough || {}"
             :selected-sauce="selectedSauce || {}"
             :selected-size="selectedSize || {}"
+            :selected-ingredients="selectedIngredients || {}"
           />
 
           <div class="content__result">
-            <span v-text="selectedPizzaInfo"></span>
-            <p>Итого: 0 ₽</p>
-            <GreenButton disabled> Готовьте! </GreenButton>
+            <p v-text="'Итого: ' + totalPriceInfo + ' ₽'"></p>
+            <GreenButton :disabled="isButtonDisabled" @click="printInfo"> Готовьте! </GreenButton>
           </div>
         </div>
       </BigBlock>
@@ -97,46 +102,74 @@ import { doughName, sizeName } from "@/common/helpers";
 import BigBlock from "@/common/components/BigBlock.vue";
 import SheetBlock from "@/common/components/SheetBlock.vue";
 import GreenButton from "@/common/components/GreenButton.vue";
-import SimpleInput from "@/common/components/SimpleInput.vue";
 import ChooseDough from "@/modules/constructor/ChooseDough.vue";
 import PizzaConstructor from "@/modules/constructor/PizzaConstructor.vue";
 import ChooseSize from "@/modules/constructor/ChooseSize.vue";
 import ChooseSauce from "@/modules/constructor/ChooseSauce.vue";
 import AddIngredient from "@/modules/constructor/AddIngredient.vue";
-import { computed, ref } from "vue";
+import {computed, ref} from "vue";
 
-const selectedDough = ref(null);
+const selectedDough = ref(doughs[0]);
 const updateSelectedDough = (dough) => {
   selectedDough.value = dough;
 };
 
-const selectedSauce = ref(null);
+const selectedSauce = ref(sauces[0]);
 
+const isButtonDisabled = computed(() => {
+  return pizzaName.value.length === 0;
+});
 const updateSelectedSauce = (sauce) => {
   selectedSauce.value = sauce;
 };
 
-const selectedSize = ref(null);
-
+const selectedSize = ref(sizes[0]);
+const pizzaName = ref("");
 const updateSelectedSize = (size) => {
   selectedSize.value = size;
 };
 
-const selectedPizzaInfo = computed(() => {
-  const doughInfo = selectedDough.value
-    ? `Тесто: ${selectedDough.value.name}`
-    : "Тесто: Тонкое";
-  const sauceInfo = selectedSauce.value
-    ? `Соус: ${selectedSauce.value.name}`
-    : "Соус: Томатный";
-  const sizeInfo = selectedSize.value
-    ? `Размер: ${selectedSize.value.name}`
-    : "Размер: 23 см";
+const selectedIngredients = ref([]);
 
-  const pizzaInfo = [doughInfo, sauceInfo, sizeInfo]
-    .filter((info) => info !== "")
-    .join(", ");
+ingredients.forEach((ingredient) => {
+  selectedIngredients.value[ingredient.id] = 0;
+});
+const updateSelectedIngredients = (ingredient, count) => {
+  selectedIngredients.value[ingredient.id] = count;
+};
 
-  return pizzaInfo;
+function printInfo(){
+    console.log(pizzaName.value)
+    console.log(selectedIngredients.value)
+    console.log(selectedSize.value)
+    console.log(selectedDough.value)
+    console.log(selectedSauce.value)
+    console.log(totalPriceInfo.value)
+}
+
+const totalPriceInfo = computed(() => {
+
+  const doughPrice = selectedDough.value
+    ? selectedDough.value.price
+    : doughs[0].price;
+  const saucePrice = selectedDough.value
+    ? selectedSauce.value.price
+    : sauces[0].price;
+
+  const sizeMultiplier = selectedSize.value
+    ? selectedSize.value.multiplier
+    : sizes[0].multiplier;
+
+
+  let totalPrice = Object.entries(selectedIngredients.value)
+    .filter(([ingredientId, count]) => count > 0)
+    .reduce((total, [ingredientId, count]) => {
+      const ingredient = ingredients.find((i) => i.id === parseInt(ingredientId));
+      return total + ingredient.price * count;
+    }, 0);
+
+  totalPrice = (totalPrice + saucePrice + doughPrice) * sizeMultiplier;
+
+  return totalPrice;
 });
 </script>

@@ -1,8 +1,22 @@
 <template>
   <app-drop>
     <div class="content__constructor">
-      <div ref="pizza" class="pizza" :class="pizzaClass" :style="pizzaStyle">
-        <div class="pizza__wrapper"></div>
+      <div ref="pizza" class="pizza" :class="pizzaClass">
+        <div class="pizza__wrapper">
+          <div
+            v-for="(ingredientId) in filteredIngredients"
+            :key="ingredientId"
+            class="pizza__filling"
+            :class="[
+              'pizza__filling--' + ingredientName(ingredientId),
+              ingredientId.count === 2
+                ? 'pizza__filling--second'
+                : ingredientId.count === 3
+                ? 'pizza__filling--third'
+                : '',
+            ]"
+          ></div>
+        </div>
       </div>
     </div>
   </app-drop>
@@ -10,7 +24,12 @@
 <script setup>
 import AppDrop from "@/common/components/AppDrop.vue";
 import { computed } from "vue";
-import {doughName, sauceName, sizeName} from "@/common/helpers";
+import {
+  doughName,
+  ingredientName,
+  sauceName,
+  sizeName,
+} from "@/common/helpers";
 
 const props = defineProps({
   selectedDough: {
@@ -22,6 +41,10 @@ const props = defineProps({
     required: true,
   },
   selectedSize: {
+    type: Object,
+    required: true,
+  },
+  selectedIngredients: {
     type: Object,
     required: true,
   },
@@ -40,8 +63,8 @@ const pizzaClass = computed(() => {
 });
 
 const pizzaStyle = computed(() => {
-  let size = "small"; // Default size
-  let width = "50%"; // Default width
+  let size = "small";
+  let width = "50%";
   if (Object.keys(props.selectedSize).length !== 0) {
     size = sizeName(props.selectedSize);
   }
@@ -53,5 +76,16 @@ const pizzaStyle = computed(() => {
   return {
     width,
   };
+});
+
+const filteredIngredients = computed(() => {
+  return Object.entries(props.selectedIngredients)
+    .filter(([ingredientId, count]) => count > 0)
+    .map(([ingredientId, count]) => {
+      return {
+        id: ingredientId,
+        count: count,
+      };
+    });
 });
 </script>

@@ -1,33 +1,36 @@
 <template>
-  <label>
+  <label
+    v-for="(sauce, index) in items"
+    :key="sauce.id"
+    class="radio ingredients__input"
+    @sauce-selected="updateSelectedSauce"
+  >
     <input
       type="radio"
       name="sauce"
-      :value="sauceName(sauce)"
+      :value="sauce.latinName"
       :checked="index === 0"
-      @click="selectSauce"
+      @input="changeSauce(sauce)"
     />
     <span>{{ sauce.name }}</span>
   </label>
 </template>
 <script setup>
-import { sauceName } from "@/common/helpers";
-import {getCurrentInstance} from "vue";
-
-const props = defineProps({
-  sauce: {
+defineProps({
+  modelValue: {
     type: Object,
+    default: () => {},
     required: true,
   },
-  index: {
-    type: Number,
-    required: true,
+  items: {
+    type: Array,
+    default: () => [],
   },
 });
 
-const { emit } = getCurrentInstance();
+const emit = defineEmits(["changeSauce"]);
 
-const selectSauce = () => {
-  emit("sauce-selected", props.sauce);
+const changeSauce = (sauce) => {
+  emit("changeSauce", sauce);
 };
 </script>

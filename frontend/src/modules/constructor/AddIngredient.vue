@@ -1,10 +1,14 @@
 <template>
-  <li>
+  <li
+    v-for="(ingredient, index) in items"
+    :key="ingredient.id"
+    class="ingredients__item"
+  >
     <app-drag
       :transfer-data="ingredient"
       :draggable="getIngredientCount(ingredient) < 3"
     >
-      <span class="filling" :class="'filling--' + ingredientName(ingredient)">{{
+      <span class="filling" :class="`filling--${ingredient.latinName}`">{{
         ingredient.name
       }}</span>
     </app-drag>
@@ -12,7 +16,7 @@
       <button
         type="button"
         class="counter__button counter__button--minus"
-        :disabled="getInitialValue(ingredient) === 0"
+        :disabled="getIngredientCount(ingredient) === 0"
         @click="decrementCounter(ingredient)"
       >
         <span class="visually-hidden">Меньше</span>
@@ -22,12 +26,12 @@
         disabled
         name="counter"
         class="counter__input"
-        :value="getInitialValue(ingredient)"
+        :value="getIngredientCount(ingredient)"
       />
       <button
         type="button"
         class="counter__button counter__button--plus"
-        :disabled="getInitialValue(ingredient) === MAX_INGREDIENT_COUNT"
+        :disabled="getIngredientCount(ingredient) === MAX_INGREDIENT_COUNT"
         @click="incrementCounter(ingredient)"
       >
         <span class="visually-hidden">Больше</span>
@@ -36,45 +40,39 @@
   </li>
 </template>
 <script setup>
-import { ingredientName } from "@/common/helpers";
 import AppDrag from "@/common/components/AppDrag.vue";
-import {MAX_INGREDIENT_COUNT} from "@/common/constants";
+import { MAX_INGREDIENT_COUNT } from "@/common/constants";
 
 const props = defineProps({
-  ingredient: {
+  modelValue: {
     type: Object,
+    default: () => {},
     required: true,
   },
-  selectedIngredients: {
-    type: Object,
-    required: true,
-  },
-  updateSelectedIngredients: {
-    type: Function,
+  items: {
+    type: Array,
+    default: () => [],
     required: true,
   },
 });
 
-const getIngredientCount = (ingredient) => {
-  const selectedIngredient = props.selectedIngredients[ingredient.id];
-  return selectedIngredient ? selectedIngredient : 0;
-};
+const emit = defineEmits(["incrementIngredient", "decrementIngredient"]);
 
-const getInitialValue = (ingredient) => {
-  return props.selectedIngredients[ingredient.id];
+const getIngredientCount = (ingredient) => {
+  return props.modelValue[ingredient.latinName]
+    ? props.modelValue[ingredient.latinName]
+    : 0;
 };
 
 const incrementCounter = (ingredient) => {
-  const currentCount = getIngredientCount(ingredient);
-  if (currentCount < 3) {
-    props.updateSelectedIngredients(ingredient, currentCount + 1);
+  if (getIngredientCount(ingredient) < MAX_INGREDIENT_COUNT) {
+    emit("incrementIngredient", ingredient);
   }
 };
 
 const decrementCounter = (ingredient) => {
-  const currentCount = getIngredientCount(ingredient);
-  if (currentCount > 0) {
-    props.updateSelectedIngredients(ingredient, currentCount - 1);
+  if (getIngredientCount(ingredient) > 0) {
+    emit("decrementIngredient", ingredient);
   }
 };
 </script>

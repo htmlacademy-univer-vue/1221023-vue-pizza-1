@@ -1,34 +1,37 @@
 <template>
-  <label>
+  <label
+    v-for="(size, index) in items"
+    :key="size.id"
+    class="diameter__input"
+    :class="`diameter__input--${size.latinName}`"
+  >
     <input
       type="radio"
       name="diameter"
-      :value="sizeName(size)"
+      :value="size.latinName"
       class="visually-hidden"
       :checked="index === 0"
-      @click="selectSize"
+      @input="changeSize(size)"
     />
     <span>{{ size.name }}</span>
   </label>
 </template>
 <script setup>
-import { sizeName } from "@/common/helpers";
-import {getCurrentInstance} from "vue";
-
-const props = defineProps({
-  size: {
+defineProps({
+  modelValue: {
     type: Object,
+    default: () => {},
     required: true,
   },
-  index: {
-    type: Number,
-    required: true,
+  items: {
+    type: Array,
+    default: () => [],
   },
 });
 
-const { emit } = getCurrentInstance();
+const emit = defineEmits(["changeSize"]);
 
-const selectSize = () => {
-  emit("size-selected", props.size);
+const changeSize = (size) => {
+  emit("changeSize", size);
 };
 </script>

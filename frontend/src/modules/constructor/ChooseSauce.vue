@@ -3,7 +3,6 @@
     v-for="(sauce, index) in items"
     :key="sauce.id"
     class="radio ingredients__input"
-    @sauce-selected="updateSelectedSauce"
   >
     <input
       type="radio"

@@ -1,36 +1,35 @@
 <template>
-  <app-drag :transfer-data="sauce">
-    <label>
-      <input
-        type="radio"
-        name="sauce"
-        :value="sauceName(sauce)"
-        :checked="index === 0"
-        @click="selectSauce"
-      />
-      <span>{{ sauce.name }}</span>
-    </label>
-  </app-drag>
+  <label
+    v-for="(sauce, index) in items"
+    :key="sauce.id"
+    class="radio ingredients__input"
+  >
+    <input
+      type="radio"
+      name="sauce"
+      :value="sauce.latinName"
+      :checked="index === 0"
+      @input="changeSauce(sauce)"
+    />
+    <span>{{ sauce.name }}</span>
+  </label>
 </template>
 <script setup>
-import { sauceName } from "@/common/helpers";
-import AppDrag from "@/common/components/AppDrag.vue";
-import {getCurrentInstance} from "vue";
-
-const props = defineProps({
-  sauce: {
+defineProps({
+  modelValue: {
     type: Object,
+    default: () => {},
     required: true,
   },
-  index: {
-    type: Number,
-    required: true,
+  items: {
+    type: Array,
+    default: () => [],
   },
 });
 
-const { emit } = getCurrentInstance();
+const emit = defineEmits(["changeSauce"]);
 
-const selectSauce = () => {
-  emit("sauce-selected", props.sauce);
+const changeSauce = (sauce) => {
+  emit("changeSauce", sauce);
 };
 </script>

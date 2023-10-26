@@ -175,3 +175,13 @@ const totalPriceInfo = computed(() => {
   );
 });
 </script>
+
+<style lang="scss" scoped>
+  @import "@/assets/scss/ds-system/ds.scss";
+  @import "@/assets/scss/layout/content-home.scss";
+  @import "@/assets/scss/layout/main.scss";
+  @import "@/assets/scss/mixins/m_center.scss";
+  @import "@/assets/scss/mixins/m_clear-list.scss";
+  @import "@/assets/scss/blocks/ingredients.scss";
+  @import "@/assets/scss/blocks/filling.scss";
+</style>

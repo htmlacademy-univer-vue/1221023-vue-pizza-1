@@ -184,4 +184,5 @@ const totalPriceInfo = computed(() => {
   @import "@/assets/scss/mixins/m_clear-list.scss";
   @import "@/assets/scss/blocks/ingredients.scss";
   @import "@/assets/scss/blocks/filling.scss";
+  @import "@/assets/scss/visually-hidden.scss";
 </style>

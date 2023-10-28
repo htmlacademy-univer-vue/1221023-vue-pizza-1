@@ -16,8 +16,9 @@
       :value="getIngredientCount(ingredient)"
       :max="MAX_INGREDIENT_COUNT"
       :color="`green`"
+      class="ingredients__counter"
       @increment-counter="increment(ingredient)"
-      @decrement-counterr="decrement(ingredient)"
+      @decrement-counter="decrement(ingredient)"
     ></app-counter>
   </li>
 </template>

@@ -12,34 +12,18 @@
         ingredient.name
       }}</span>
     </app-drag>
-    <div class="counter counter--orange ingredients__counter">
-      <button
-        type="button"
-        class="counter__button counter__button--minus"
-        :disabled="getIngredientCount(ingredient) === 0"
-        @click="decrementCounter(ingredient)"
-      >
-        <span class="visually-hidden">Меньше</span>
-      </button>
-      <input
-        type="text"
-        disabled
-        name="counter"
-        class="counter__input"
-        :value="getIngredientCount(ingredient)"
-      />
-      <button
-        type="button"
-        class="counter__button counter__button--plus"
-        :disabled="getIngredientCount(ingredient) === MAX_INGREDIENT_COUNT"
-        @click="incrementCounter(ingredient)"
-      >
-        <span class="visually-hidden">Больше</span>
-      </button>
-    </div>
+    <app-counter
+      :value="getIngredientCount(ingredient)"
+      :max="MAX_INGREDIENT_COUNT"
+      :color="`green`"
+      class="ingredients__counter"
+      @increment-counter="increment(ingredient)"
+      @decrement-counter="decrement(ingredient)"
+    ></app-counter>
   </li>
 </template>
 <script setup>
+import AppCounter from "@/common/components/AppCounter.vue";
 import AppDrag from "@/common/components/AppDrag.vue";
 import { MAX_INGREDIENT_COUNT } from "@/common/constants";
 
@@ -56,23 +40,30 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["incrementIngredient", "decrementIngredient"]);
-
 const getIngredientCount = (ingredient) => {
   return props.modelValue[ingredient.latinName]
     ? props.modelValue[ingredient.latinName]
     : 0;
 };
 
-const incrementCounter = (ingredient) => {
+const emit = defineEmits(["incrementIngredient", "decrementIngredient"]);
+
+const increment = (ingredient) => {
   if (getIngredientCount(ingredient) < MAX_INGREDIENT_COUNT) {
     emit("incrementIngredient", ingredient);
   }
 };
 
-const decrementCounter = (ingredient) => {
+const decrement = (ingredient) => {
   if (getIngredientCount(ingredient) > 0) {
     emit("decrementIngredient", ingredient);
   }
 };
 </script>
+<style lang="scss" scoped>
+  @import "@/assets/scss/ds-system/ds.scss";
+  @import "@/assets/scss/mixins/m_center.scss";
+  @import "@/assets/scss/mixins/m_clear-list.scss";
+  @import "@/assets/scss/blocks/filling.scss";
+  @import "@/assets/scss/blocks/ingredients.scss";
+</style>

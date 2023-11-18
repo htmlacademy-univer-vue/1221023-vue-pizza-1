@@ -6,19 +6,19 @@
   >
     <app-drag
       :transfer-data="ingredient"
-      :draggable="getIngredientCount(ingredient) < 3"
+      :draggable="props.modelValue.getIngredientCount(ingredient) < 3"
     >
       <span class="filling" :class="`filling--${ingredient.latinName}`">{{
         ingredient.name
       }}</span>
     </app-drag>
     <app-counter
-      :value="getIngredientCount(ingredient)"
+      :value="props.modelValue.getIngredientCount(ingredient)"
       :max="MAX_INGREDIENT_COUNT"
       :color="`green`"
       class="ingredients__counter"
-      @increment-counter="increment(ingredient)"
-      @decrement-counter="decrement(ingredient)"
+      @increment-counter="props.modelValue.incrementIngredient(ingredient)"
+      @decrement-counter="props.modelValue.decrementIngredient(ingredient)"
     ></app-counter>
   </li>
 </template>
@@ -39,31 +39,11 @@ const props = defineProps({
     required: true,
   },
 });
-
-const getIngredientCount = (ingredient) => {
-  return props.modelValue[ingredient.latinName]
-    ? props.modelValue[ingredient.latinName]
-    : 0;
-};
-
-const emit = defineEmits(["incrementIngredient", "decrementIngredient"]);
-
-const increment = (ingredient) => {
-  if (getIngredientCount(ingredient) < MAX_INGREDIENT_COUNT) {
-    emit("incrementIngredient", ingredient);
-  }
-};
-
-const decrement = (ingredient) => {
-  if (getIngredientCount(ingredient) > 0) {
-    emit("decrementIngredient", ingredient);
-  }
-};
 </script>
 <style lang="scss" scoped>
-  @import "@/assets/scss/ds-system/ds.scss";
-  @import "@/assets/scss/mixins/m_center.scss";
-  @import "@/assets/scss/mixins/m_clear-list.scss";
-  @import "@/assets/scss/blocks/filling.scss";
-  @import "@/assets/scss/blocks/ingredients.scss";
+@import "@/assets/scss/ds-system/ds.scss";
+@import "@/assets/scss/mixins/m_center.scss";
+@import "@/assets/scss/mixins/m_clear-list.scss";
+@import "@/assets/scss/blocks/filling.scss";
+@import "@/assets/scss/blocks/ingredients.scss";
 </style>

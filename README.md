@@ -5,7 +5,7 @@
 ## Начальные требования
 - Docker
 - NodeJS >= 16
-   
+    
 ## Docker установка
 https://docs.docker.com/get-docker/
 

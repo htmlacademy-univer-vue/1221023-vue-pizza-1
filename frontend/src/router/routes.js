@@ -12,6 +12,12 @@ export default [
     meta: { layout: "DefaultLayout" },
   },
   {
+    path: "/success",
+    name: "SuccessView",
+    component: () => import("../views/SuccessView.vue"),
+    meta: { layout: "SimpleLayout" },
+  },
+  {
     path: "/login",
     name: "LoginView",
     component: () => import("../views/LoginView.vue"),

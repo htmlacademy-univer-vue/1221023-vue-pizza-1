@@ -27,9 +27,8 @@
       Контактный телефон: <span>{{ user.phone }}</span>
     </p>
   </div>
-
   <div
-    v-for="(address, index) in user.getAddresses"
+    v-for="(address, index) in user.addresses"
     :key="index"
     class="layout__address"
   >
@@ -116,7 +115,7 @@ const saveForm = () => {
     data.editAddress({ ...selectedAddress.value });
     cancelForm();
   } else {
-    data.addAddress({ ...newAddress.value });
+    user.addAddress({ ...newAddress.value });
     resetForm();
   }
 };

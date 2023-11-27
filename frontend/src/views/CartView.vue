@@ -1,5 +1,5 @@
 <template>
-  <form method="post" class="layout-form">
+  <form class="layout-form" @submit.prevent="makeOrder">
     <main class="content cart">
       <div class="container">
         <div class="cart__title">
@@ -106,7 +106,7 @@
                 <option value="-1">Заберу сам</option>
                 <option value="-2">Новый адрес</option>
                 <option
-                  v-for="(address, index) in profile.getAddresses"
+                  v-for="(address, index) in profile.addresses"
                   :key="index"
                   :value="address.id"
                 >
@@ -225,15 +225,27 @@
         <b>Итого: {{ cart.getFullPrice }} ₽</b>
       </div>
 
-      <div class="footer__submit">
+      <div v-if="authStore.user !== null" class="footer__submit">
         <button
           :disabled="cart.getFullPrice === 0"
           type="submit"
           class="button"
-          @click="makeOrder"
         >
           Оформить заказ
         </button>
+      </div>
+      <div v-else class="footer__login">
+        <div class="footer__more">
+          <router-link
+            class="button"
+            :to="{ name: 'LoginView', query: { redirect: '/cart' } }"
+          >
+            Авторизируйтесь
+          </router-link>
+        </div>
+        <p class="footer__text">
+          Совершить заказ могут только<br />авторизированные пользователи
+        </p>
       </div>
     </section>
   </form>
@@ -247,11 +259,13 @@ import { useProfileStore } from "@/stores/profile";
 import { ref, watch } from "vue";
 import router from "@/router";
 import { usePizzaStore } from "@/stores/pizza";
+import { useAuthStore } from "@/stores/auth";
 
 const cart = useCartStore();
 const data = useDataStore();
 const profile = useProfileStore();
 const pizza = usePizzaStore();
+const authStore = useAuthStore();
 
 const selectedAddressId = ref("-1");
 const selectedAddress = ref(null);
@@ -260,7 +274,7 @@ const orderPhone = ref(profile.phone);
 
 watch(selectedAddressId, (newAddressId) => {
   if (newAddressId >= 0) {
-    selectedAddress.value = profile.getAddresses.find(
+    selectedAddress.value = profile.addresses.find(
       (address) => address.id === newAddressId
     );
   } else {
@@ -269,30 +283,34 @@ watch(selectedAddressId, (newAddressId) => {
 });
 
 function makeOrder() {
-  const newOrder = {
-    ...cart,
-    id: Math.floor(10000000 + Math.random() * 90000000),
-    phone: orderPhone.value,
-  };
+  if (!authStore.isAuthenticated) {
+    router.push("/login?redirect=/cart");
+  } else {
+    const newOrder = {
+      ...cart,
+      id: Math.floor(10000000 + Math.random() * 90000000),
+      phone: orderPhone.value,
+    };
 
-  if (selectedAddressId.value >= 0) {
-    newOrder["address"] = profile.getAddresses.find(
-      (address) => address.id === selectedAddressId.value
-    );
-  }
-  if (selectedAddressId.value === "-2") {
-    newOrder["address"]["building"] = newAddress.value.building;
-    newOrder["address"]["flat"] = newAddress.value.flat;
-    newOrder["address"]["street"] = newAddress.value.street;
-    newOrder["address"]["comment"] = "";
-  }
+    if (selectedAddressId.value >= 0) {
+      newOrder["address"] = profile.addresses.find(
+        (address) => address.id === selectedAddressId.value
+      );
+    }
+    if (selectedAddressId.value === "-2") {
+      newOrder["address"]["building"] = newAddress.value.building;
+      newOrder["address"]["flat"] = newAddress.value.flat;
+      newOrder["address"]["street"] = newAddress.value.street;
+      newOrder["address"]["comment"] = "";
+    }
 
-  if (selectedAddressId.value === "-1") {
-    delete newOrder["address"];
+    if (selectedAddressId.value === "-1") {
+      delete newOrder["address"];
+    }
+    profile.makeOrder(newOrder);
+    cart.reset();
+    router.push("/success");
   }
-  profile.makeOrder(newOrder);
-  cart.reset();
-  router.push("/success");
 }
 
 function changePizza(pizza_change) {

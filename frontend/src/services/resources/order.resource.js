@@ -2,10 +2,10 @@ import { CrudService } from "@/services/api/crud.service";
 
 export class OrderResource extends CrudService {
   constructor() {
-    super("/api/orders");
+    super("http://localhost:3000/orders");
   }
 
-  getOrder() {
+  getOrders() {
     return this.get();
   }
   createOrder(order) {

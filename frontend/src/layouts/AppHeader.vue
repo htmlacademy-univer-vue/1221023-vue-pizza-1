@@ -3,7 +3,7 @@
     <div class="header__logo">
       <router-link :to="{ name: 'HomeView' }" class="logo"
         ><img
-          src="@/assets/img/logo.svg"
+          src="http://127.0.0.1:3000/public/img/logo.svg"
           alt="V!U!E! Pizza logo"
           width="90"
           height="40"
@@ -25,8 +25,8 @@
             "
           />
           <img
-            src="@/assets/img/users/user5.jpg"
-            srcset="@/assets/img/users/user5@2x.jpg"
+            src="http://127.0.0.1:3000/public/img/users/user5.jpg"
+            srcset="http://127.0.0.1:3000/public/img/users/user5@2x.jpg"
             :alt="user.name"
             width="32"
             height="32"

@@ -15,7 +15,7 @@
       >
     </div>
     <div class="header__user">
-      <router-link :to="{ name: 'ProfileView' }">
+      <router-link v-if="auth.user" :to="{ name: 'ProfileView' }">
         <picture>
           <source
             type="image/webp"
@@ -34,17 +34,29 @@
         </picture>
         <span>{{ user.name }}</span>
       </router-link>
-      <a href="#" class="header__logout"><span>Выйти</span></a>
-      <router-link :to="{ name: 'LoginView' }"><span>Войти</span></router-link>
+      <a v-if="auth.user" class="header__logout" @click="logout"
+        ><span>Выйти</span></a
+      >
+      <router-link v-if="!auth.isAuthenticated" :to="{ name: 'LoginView' }"
+        ><span>Войти</span></router-link
+      >
     </div>
   </header>
 </template>
 <script setup>
 import { useCartStore } from "@/stores/cart";
 import { useProfileStore } from "@/stores/profile";
+import { useAuthStore } from "@/stores/auth";
+import router from "@/router";
 
 const cart = useCartStore();
 const user = useProfileStore();
+const auth = useAuthStore();
+
+async function logout() {
+  await auth.logout();
+  await router.push("/");
+}
 </script>
 <style lang="scss" scoped>
 @import "@/assets/scss/ds-system/ds.scss";

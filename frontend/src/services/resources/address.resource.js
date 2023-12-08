@@ -2,7 +2,7 @@ import { CrudService } from "@/services/api/crud.service";
 
 export class AddressesResource extends CrudService {
   constructor() {
-    super("/api/addresses");
+    super("http://localhost:3000/addresses");
   }
 
   getAddresses() {

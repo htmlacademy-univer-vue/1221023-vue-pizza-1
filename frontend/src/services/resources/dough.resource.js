@@ -2,7 +2,7 @@ import { CrudService } from "@/services/api/crud.service";
 
 export class DoughResource extends CrudService {
   constructor() {
-    super("/api/dough");
+    super("http://localhost:3000/dough");
   }
 
   getDough() {

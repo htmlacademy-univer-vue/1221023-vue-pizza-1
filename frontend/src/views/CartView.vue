@@ -292,7 +292,7 @@ function makeOrder() {
   }
   profile.makeOrder(newOrder);
   cart.reset();
-  router.push("/profile/orders");
+  router.push("/success");
 }
 
 function changePizza(pizza_change) {

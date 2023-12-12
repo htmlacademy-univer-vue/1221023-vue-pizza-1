@@ -60,7 +60,7 @@ export class ApiService {
     return this._wrapper2(axios.post, url, payload)();
   }
   $put(url, payload) {
-    return this._wrapper1(axios.put, url, payload)();
+    return this._wrapper2(axios.put, url, payload)();
   }
   $delete(url) {
     return this._wrapper1(axios.delete, url)();

@@ -2,7 +2,7 @@ import { CrudService } from "@/services/api/crud.service";
 
 export class SizeResource extends CrudService {
   constructor() {
-    super("http://localhost:3000/size");
+    super("http://localhost:3000/sizes");
   }
 
   getSize() {

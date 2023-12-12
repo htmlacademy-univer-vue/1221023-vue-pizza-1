@@ -13,8 +13,8 @@
         "
       />
       <img
-        src="@/assets/img/users/user5@2x.jpg"
-        srcset="@/assets/img/users/user5@4x.jpg"
+        src="http://127.0.0.1:3000/public/img/users/user5@2x.jpg"
+        srcset="http://127.0.0.1:3000/public/img/users/user5@4x.jpg"
         :alt="user.name"
         width="72"
         height="72"
@@ -112,7 +112,7 @@ const editAddress = (address) => {
 
 const saveForm = () => {
   if (selectedAddress.value) {
-    data.editAddress({ ...selectedAddress.value });
+    user.editAddress({ ...selectedAddress.value });
     cancelForm();
   } else {
     user.addAddress({ ...newAddress.value });
@@ -121,7 +121,7 @@ const saveForm = () => {
 };
 
 const deleteAddress = () => {
-  data.deleteAddress(selectedAddress.value);
+  user.deleteAddress(selectedAddress.value);
   cancelForm();
 };
 </script>

@@ -2,7 +2,7 @@
     <div class="layout__sidebar sidebar">
       <router-link :to="{name: 'HomeView'}" class="logo layout__logo">
         <img
-          src="@/assets/img/logo.svg"
+          src="http://127.0.0.1:3000/public/img/logo.svg"
           alt="V!U!E! Pizza logo"
           width="90"
           height="40"
